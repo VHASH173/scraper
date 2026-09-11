@@ -1,0 +1,30 @@
+name: Hydra Scraper Cloud
+
+on:
+  workflow_dispatch:
+
+jobs:
+  run-scraper:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clonar repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Instalar dependencias
+        run: pip install requests
+
+      - name: Ejecutar scraper en la nube
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python hydra_scraper.py
+
+      - name: Guardar el dataset generado
+        uses: actions/upload-artifact@v4
+        with:
+          name: dataset-cerebro-hydra
+          path: dataset_cerebro_hydra.jsonl
